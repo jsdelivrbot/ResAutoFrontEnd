@@ -44,8 +44,11 @@
 
 <script>
 
+    import store from '../store';
+
     export default {
         name: 'Login',
+        store: store,
         data: function () {
             return {
                 user: '',
@@ -81,7 +84,26 @@
                 });
 
                 if (!this.formHasErrors) {
-                    // TODO: Validar autenticação
+                    const userpass = this.user + ':' + this.password;
+                    const authheader = "Basic " + btoa(userpass);
+                    this.$store.commit('authHeader', authheader);
+                    const url = this.$store.getters.backendBaseUrl;
+                    const config = {
+                        'headers': {
+                            'Authorization': authheader,
+                        }
+                    };
+                    this.$http.get(url, config).then(response => {
+                        this.$store.commit('userLogado', true);
+                        this.$router.push({'name': 'home'});
+                    }, response => {
+                        // error callback
+                        this.userRules = [this.rules.userMatch];
+                        this.passwordRules = [this.rules.userMatch];
+                        Object.keys(this.form).forEach(f => {
+                            this.$refs[f].validate(true)
+                        });
+                    });
                 } else {
                     this.userRules = [this.rules.required];
                     this.passwordRules = [this.rules.required];

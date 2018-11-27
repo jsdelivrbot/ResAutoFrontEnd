@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import store from './store';
 import Home from './views/Home'
 import Settings from './views/Settings'
 import Estrutura from './views/Estrutura'
@@ -53,8 +53,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-    // TODO: detectar se o usuário está logado
-    let logged = true;
+    let logged = store.getters.userLogado;
 
     let authPage = to.matched.some(record => record.meta.authPage);
     let anonymousAccess = to.matched.some(record => record.meta.anonymousAccess);

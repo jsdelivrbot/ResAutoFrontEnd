@@ -96,7 +96,9 @@
         methods: {
             logout() {
                 this.drawerMostrar = false;
-                // TODO: Ação logout
+                this.$store.commit('authHeader', '');
+                this.$store.commit('userLogado', false);
+                this.$router.push({'name': 'login'});
             },
 
             onClickItemMenu(item) {
