@@ -31,9 +31,26 @@
         },
         watch: {
             estado() {
-                // TODO: alterar estado lampada no backend
                 const id = this.dispositivo.id;
-                const estado = this.estado;
+                const estado = this.estado + 0 + '';
+
+                const url = this.$store.getters.backendBaseUrl + 'dispositivos/' + id + '/';
+                const config = {
+                    'headers': {
+                        'Authorization': localStorage['authHeader'],
+                    }
+                };
+
+                const body = {
+                    'id': id,
+                    'estado': estado,
+                };
+
+                this.$http.patch(url, body, config).then(response => {
+                }, response => {
+                    // error callback
+                    console.log('Ops!')
+                });
             },
         }
 

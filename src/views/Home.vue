@@ -13,26 +13,33 @@
     export default {
         components: {Lampada},
         data: () => ({
-            lampadas: [
-                {
-                    id: 122,
-                    versao: 1,
-                    codigo: 11,
-                    estado: 0,
-                    leitura_valor: null,
-                    leitura_unidade: "",
-                    sensibilidade: null,
-                },
-                {
-                    id: 213,
-                    versao: 1,
-                    codigo: 11,
-                    estado: 1,
-                    leitura_valor: null,
-                    leitura_unidade: "",
-                    sensibilidade: null,
-                }
-            ]
+            lampadas: []
         }),
+        methods: {
+
+            atualizarLampadas() {
+                const url = this.$store.getters.backendBaseUrl + 'dispositivos/?codigo=11&ordering=id';
+                const config = {
+                    'headers': {
+                        'Authorization': localStorage['authHeader'],
+                    }
+                };
+                this.$http.get(url, config).then(response => {
+                    const lampadas = response.body;
+
+                    // Mapear variáveis
+                    for (let i = 0; i < lampadas.length; i++) {
+                        lampadas[i]['estado'] = lampadas[i]['estado'] === '1';
+                    }
+                    this.lampadas = lampadas;
+                }, response => {
+                    // error callback
+                    console.log('Ops!')
+                });
+            },
+        },
+        created() {
+            this.atualizarLampadas();
+        }
     }
 </script>
