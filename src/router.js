@@ -1,27 +1,62 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
 
-Vue.use(Router)
+import Home from './views/Home'
+import Estrutura from './views/Estrutura'
+import Login from './views/Login'
 
-export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: function () { 
-        return import(/* webpackChunkName: "about" */ './views/About.vue')
-      }
-    }
-  ]
-})
+Vue.use(Router);
+
+const router = new Router({
+    routes: [
+        {
+            path: '*',
+            redirect: '/login',
+            meta: {
+                authPage: true
+            }
+        },
+        {
+            path: '/',
+            redirect: '/login',
+            meta: {
+                authPage: true
+            }
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: Login,
+            meta: {
+                authPage: true
+            }
+        },
+        {
+            path: '',
+            name: 'estrutura',
+            component: Estrutura,
+            children: [
+                {
+                    path: '/home',
+                    name: 'home',
+                    component: Home,
+                },
+            ],
+        },
+    ]
+});
+
+router.beforeEach((to, from, next) => {
+    // TODO: detectar se o usuário está logado
+    let logged = true;
+
+    let authPage = to.matched.some(record => record.meta.authPage);
+    let anonymousAccess = to.matched.some(record => record.meta.anonymousAccess);
+
+    if (anonymousAccess) next();
+    else if (!authPage && !logged) next('login');
+    else if (authPage && logged) next('home');
+    else next()
+});
+
+export default router
