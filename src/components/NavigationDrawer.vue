@@ -96,8 +96,8 @@
         methods: {
             logout() {
                 this.drawerMostrar = false;
-                this.$store.commit('authHeader', '');
-                this.$store.commit('userLogado', false);
+                localStorage.removeItem('authHeader');
+                localStorage.removeItem('userLogado');
                 this.$router.push({'name': 'login'});
             },
 

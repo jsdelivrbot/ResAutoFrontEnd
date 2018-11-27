@@ -53,7 +53,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-    let logged = store.getters.userLogado;
+    let logged = localStorage['userLogado'];
 
     let authPage = to.matched.some(record => record.meta.authPage);
     let anonymousAccess = to.matched.some(record => record.meta.anonymousAccess);

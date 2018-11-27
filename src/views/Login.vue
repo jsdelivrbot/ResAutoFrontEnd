@@ -86,7 +86,7 @@
                 if (!this.formHasErrors) {
                     const userpass = this.user + ':' + this.password;
                     const authheader = "Basic " + btoa(userpass);
-                    this.$store.commit('authHeader', authheader);
+                    localStorage['authHeader'] = authheader;
                     const url = this.$store.getters.backendBaseUrl;
                     const config = {
                         'headers': {
@@ -94,7 +94,7 @@
                         }
                     };
                     this.$http.get(url, config).then(response => {
-                        this.$store.commit('userLogado', true);
+                        localStorage['userLogado'] = true;
                         this.$router.push({'name': 'home'});
                     }, response => {
                         // error callback

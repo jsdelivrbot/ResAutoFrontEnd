@@ -7,10 +7,6 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         backendBaseUrl: 'https://frozen-harbor-36630.herokuapp.com/',
-        user: {
-            authHeader: '',
-            logado: false,
-        },
         navigation: {
             drawerMostrar: false
         },
@@ -29,7 +25,6 @@ const store = new Vuex.Store({
     },
 
     getters: {
-        authHeader: state => state.user.authHeader,
         backendBaseUrl: state => state.backendBaseUrl,
         userLogado: state => state.user.logado,
         drawerMostrar: state => state.navigation.drawerMostrar,
@@ -42,12 +37,6 @@ const store = new Vuex.Store({
     },
 
     mutations: {
-        authHeader: (state, authHeader) => {
-            state.user.authHeader = authHeader;
-        },
-        userLogado: (state, userLogado) => {
-            state.user.logado = userLogado;
-        },
         drawerMostrar: (state, drawerMostrar) => {
             state.navigation.drawerMostrar = drawerMostrar;
         },
