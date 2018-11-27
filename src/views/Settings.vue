@@ -5,7 +5,7 @@
                 <v-layout align-center column fill-height>
                     <div class="xs-12">
                         <div class="headline text-xs-center grey--text text--darken-3"
-                             style="text-shadow: 1px 1px #000;">Sensor de Luminosidade <br> (Lux)
+                             style="text-shadow: 1px 1px #000;">Sensor de Luminosidade
                         </div>
                     </div>
                     <div class="xs-12">
@@ -55,7 +55,8 @@
         methods: {
             sensibilidadeLuminosidadeEscolhida() {
                 // TODO: notificar backend alteração em sensor de luminosidade
-                console.log('sensorLuminosidade', this.sensorLuminosidade);
+                const sensibilidade = Math.round(this.sensorLuminosidade/100 * 1024);
+                console.log('sensorLuminosidade', sensibilidade);
             }
         },
         watch: {
@@ -67,7 +68,8 @@
         mounted() {
             // TODO: alterar sensor de presença e luminosidade de acordo com backend
             this.sensorPresencaEstado = false;
-            this.sensorLuminosidade = 0;
+            const sensibilidade = 0;
+            this.sensorLuminosidade = Math.round(sensibilidade/1024 * 100);
         }
     }
 </script>
