@@ -76,7 +76,7 @@
             drawerItens: [
                 {cabecalho: 'ResAuto'},
                 {icone: 'fas fa-home', texto: 'Home', rota: {name: 'home'}, desabilitar: false},
-                {icone: 'fas fa-cog', texto: 'Configurações', rota: {name: 'home'}, desabilitar: true},
+                {icone: 'fas fa-cog', texto: 'Configurações', rota: {name: 'settings'}, desabilitar: false},
                 {divisor: true},
                 {icone: 'fas fa-sign-out-alt', texto: 'Sair', id: 'sair', desabilitar: false, action: 'logout'},
             ],
