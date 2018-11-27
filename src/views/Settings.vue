@@ -1,6 +1,6 @@
 <template>
     <v-container fluid>
-        <v-card flat color="transparent" style="margin-top: 30px;">
+        <v-card v-if="sensorLuminosidadeId" flat color="transparent" style="margin-top: 30px;">
             <v-card-title primary-title style="padding: 0;">
                 <v-layout align-center column fill-height>
                     <div class="xs-12">
@@ -23,7 +23,7 @@
             </v-card-title>
         </v-card>
 
-        <v-card flat color="transparent" style="margin-top: 30px;">
+        <v-card v-if="sensorPresencaId" flat color="transparent" style="margin-top: 30px;">
             <v-card-title primary-title style="padding: 0;">
                 <v-layout align-center column fill-height>
                     <div class="xs-12">
@@ -54,22 +54,99 @@
         }),
         methods: {
             sensibilidadeLuminosidadeEscolhida() {
-                // TODO: notificar backend alteração em sensor de luminosidade
                 const sensibilidade = Math.round(this.sensorLuminosidade/100 * 1024);
-                console.log('sensorLuminosidade', sensibilidade);
+                const id = this.sensorLuminosidadeId;
+
+                const url = this.$store.getters.backendBaseUrl + 'dispositivos/' + id + '/';
+                const config = {
+                    'headers': {
+                        'Authorization': localStorage['authHeader'],
+                    }
+                };
+
+                const body = {
+                    'id': id,
+                    'sensibilidade': sensibilidade,
+                };
+
+                this.$http.patch(url, body, config).then(response => {
+                }, response => {
+                    // error callback
+                    console.log('Ops!')
+                });
+            },
+
+
+            atualizarSensibilidadeLuminosidade(){
+                const url = this.$store.getters.backendBaseUrl + 'dispositivos/?codigo=00&ordering=id';
+                const config = {
+                    'headers': {
+                        'Authorization': localStorage['authHeader'],
+                    }
+                };
+
+                this.$http.get(url, config).then(response => {
+                    const sensor = response.body.length > 0 ? response.body[0] : null;
+
+                    if (sensor){
+                        const sensibilidade = sensor['sensibilidade'];
+                        this.sensorLuminosidade = Math.round(sensibilidade/1024 * 100);
+                        this.sensorLuminosidadeId = sensor['id'];
+                    }
+                }, response => {
+                    // error callback
+                    console.log('Ops!')
+                });
+            },
+
+            atualizarSensorPresenca(){
+                const url = this.$store.getters.backendBaseUrl + 'dispositivos/?codigo=10&ordering=id';
+                const config = {
+                    'headers': {
+                        'Authorization': localStorage['authHeader'],
+                    }
+                };
+
+                this.$http.get(url, config).then(response => {
+                    const sensor = response.body.length > 0 ? response.body[0] : null;
+
+                    if (sensor){
+                        this.sensorPresencaEstado = sensor['estado'] === '1';
+                        this.sensorPresencaId = sensor['id'];
+                    }
+                }, response => {
+                    // error callback
+                    console.log('Ops!')
+                });
             }
         },
         watch: {
             sensorPresencaEstado() {
-                // TODO: notificar backend alteração em sensor de presença
-                console.log('sensorPresencaEstado', this.sensorPresencaEstado);
+                const id = this.sensorPresencaId;
+                const estado = this.sensorPresencaEstado + 0 + '';
+
+                const url = this.$store.getters.backendBaseUrl + 'dispositivos/' + id + '/';
+                const config = {
+                    'headers': {
+                        'Authorization': localStorage['authHeader'],
+                    }
+                };
+
+                const body = {
+                    'id': id,
+                    'estado': estado,
+                };
+
+                this.$http.patch(url, body, config).then(response => {
+                }, response => {
+                    // error callback
+                    console.log('Ops!')
+                });
             },
         },
-        mounted() {
-            // TODO: alterar sensor de presença e luminosidade de acordo com backend
-            this.sensorPresencaEstado = false;
-            const sensibilidade = 0;
-            this.sensorLuminosidade = Math.round(sensibilidade/1024 * 100);
+        created() {
+            this.atualizarSensorPresenca();
+            this.atualizarSensibilidadeLuminosidade();
         }
     }
 </script>
