@@ -54,7 +54,7 @@
         }),
         methods: {
             sensibilidadeLuminosidadeEscolhida() {
-                const sensibilidade = Math.round(this.sensorLuminosidade/100 * 1024);
+                const sensibilidade = Math.round(this.sensorLuminosidade/100 * 50000 + 500);
                 const id = this.sensorLuminosidadeId;
 
                 const url = this.$store.getters.backendBaseUrl + 'dispositivos/' + id + '/';
@@ -90,7 +90,7 @@
 
                     if (sensor){
                         const sensibilidade = sensor['sensibilidade'];
-                        this.sensorLuminosidade = Math.round(sensibilidade/1024 * 100);
+                        this.sensorLuminosidade = Math.round(sensibilidade/(50000) * 100);
                         this.sensorLuminosidadeId = sensor['id'];
                     }
                 }, response => {
